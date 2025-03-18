@@ -11,7 +11,10 @@ function encryptDefault() {
         alert("Masukkan teks untuk dienkripsi.");
         return;
     }
-    let encryptedText = hillCipherEncrypt(text, [[3, 3], [2, 5]]);
+    let keyMatrix = [[3, 3], [2, 5]]; // Matriks kunci bawaan 2x2
+    text = addDummyLetters(text, keyMatrix.length); // Sesuaikan dengan ukuran matriks
+
+    let encryptedText = hillCipherEncrypt(text, keyMatrix);
     document.getElementById("encrypted-default").innerText = encryptedText;
 }
 
@@ -23,6 +26,11 @@ function encryptCustom() {
         return;
     }
     let keyMatrix = parseKeyMatrix(keyInput, 10); // Maksimal 10×10
+    if (!keyMatrix) return;
+
+    let matrixSize = keyMatrix.length;
+    text = addDummyLetters(text, matrixSize); // Tambahkan dummy letters sesuai ukuran matriks
+
     let encryptedText = hillCipherEncrypt(text, keyMatrix);
     document.getElementById("encrypted-custom").innerText = encryptedText;
 }
@@ -44,16 +52,28 @@ function decryptCustom() {
         alert("Masukkan teks terenkripsi dan matriks kunci.");
         return;
     }
-    let keyMatrix = parseKeyMatrix(keyInput);
+    let keyMatrix = parseKeyMatrix(keyInput, 10);
+    if (!keyMatrix) return;
+
     let decryptedText = hillCipherDecrypt(text, keyMatrix);
     document.getElementById("decrypted-custom").innerText = decryptedText;
 }
 
 function parseKeyMatrix(input, maxSize) {
-    let matrix = input.split(",").map(Number);
-    if (matrix.length > maxSize * maxSize) {
+    let numbers = input.split(",").map(Number);
+    let size = Math.sqrt(numbers.length);
+    if (!Number.isInteger(size)) {
+        alert("Matriks harus berbentuk persegi (2x2, 3x3, dll.).");
+        return null;
+    }
+    if (size > maxSize) {
         alert("Matriks terlalu besar! Maksimal " + maxSize + "×" + maxSize);
         return null;
+    }
+
+    let matrix = [];
+    for (let i = 0; i < size; i++) {
+        matrix.push(numbers.slice(i * size, (i + 1) * size));
     }
     return matrix;
 }
