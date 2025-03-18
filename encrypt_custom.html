@@ -1,1 +1,23 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enkripsi - Kunci Custom</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Enkripsi (Kunci Custom)</h1>
+    <a href="index.html">Kembali ke Menu</a>
+    <br><br>
+    <label for="plain-text-custom">Masukkan teks:</label>
+    <input type="text" id="plain-text-custom" placeholder="Masukkan teks...">
+    <br>
+    <label for="custom-key">Masukkan matriks kunci (mis: 2x2, dipisah koma):</label>
+    <input type="text" id="custom-key" placeholder="Contoh: 3,3,2,5">
+    <button onclick="encryptCustom()">Enkripsi</button>
+    <h3>Hasil:</h3>
+    <p id="encrypted-custom"></p>
+</body>
+</html>
