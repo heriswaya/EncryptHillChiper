@@ -22,7 +22,7 @@ function encryptCustom() {
         alert("Masukkan teks dan matriks kunci.");
         return;
     }
-    let keyMatrix = parseKeyMatrix(keyInput);
+    let keyMatrix = parseKeyMatrix(keyInput, 10); // Maksimal 10×10
     let encryptedText = hillCipherEncrypt(text, keyMatrix);
     document.getElementById("encrypted-custom").innerText = encryptedText;
 }
