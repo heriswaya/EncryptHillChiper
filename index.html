@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,48 +7,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Hill Cipher Encryption & Decryption</h1>
-        <nav>
-            <ul>
-                <li><a href="#encrypt-default">Enkripsi (Kunci Bawaan)</a></li>
-                <li><a href="#encrypt-custom">Enkripsi (Kunci Custom)</a></li>
-                <li><a href="#decrypt-default">Dekripsi (Kunci Bawaan)</a></li>
-                <li><a href="#decrypt-custom">Dekripsi (Kunci Custom)</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <section id="encrypt-default">
-        <h2>Enkripsi (Kunci Bawaan)</h2>
-        <textarea id="plain-text-default" placeholder="Masukkan teks..."></textarea>
-        <button onclick="encryptDefault()">Enkripsi</button>
-        <p>Hasil: <span id="encrypted-default"></span></p>
-    </section>
-    
-    <section id="encrypt-custom">
-        <h2>Enkripsi (Kunci Custom)</h2>
-        <textarea id="plain-text-custom" placeholder="Masukkan teks..."></textarea>
-        <input type="text" id="custom-matrix" placeholder="Masukkan matriks kunci (misal: 1,2;3,4)">
-        <button onclick="encryptCustom()">Enkripsi</button>
-        <p>Hasil: <span id="encrypted-custom"></span></p>
-    </section>
-    
-    <section id="decrypt-default">
-        <h2>Dekripsi (Kunci Bawaan)</h2>
-        <textarea id="cipher-text-default" placeholder="Masukkan teks terenkripsi..."></textarea>
-        <button onclick="decryptDefault()">Dekripsi</button>
-        <p>Hasil: <span id="decrypted-default"></span></p>
-    </section>
-    
-    <section id="decrypt-custom">
-        <h2>Dekripsi (Kunci Custom)</h2>
-        <textarea id="cipher-text-custom" placeholder="Masukkan teks terenkripsi..."></textarea>
-        <input type="text" id="custom-matrix-decrypt" placeholder="Masukkan matriks kunci (misal: 1,2;3,4)">
-        <button onclick="decryptCustom()">Dekripsi</button>
-        <p>Hasil: <span id="decrypted-custom"></span></p>
-    </section>
-    
-    <script src="script.js"></script>
+    <h1>Hill Cipher Encryption & Decryption</h1>
+    <ul>
+        <li><a href="encrypt_default.html">Enkripsi (Kunci Bawaan)</a></li>
+        <li><a href="encrypt_custom.html">Enkripsi (Kunci Custom)</a></li>
+        <li><a href="decrypt_default.html">Dekripsi (Kunci Bawaan)</a></li>
+        <li><a href="decrypt_custom.html">Dekripsi (Kunci Custom)</a></li>
+    </ul>
 </body>
 </html>
