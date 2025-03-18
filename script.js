@@ -65,7 +65,7 @@ function parseKeyMatrix(input, maxSize) {
 }
 
 function hillCipherEncrypt(text, keyMatrix) {
-    let size = Math.sqrt(keyMatrix.length);
+    let size = keyMatrix.length;
     let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
     let encryptedNumbers = [];
     for (let i = 0; i < textNumbers.length; i += size) {
@@ -73,7 +73,7 @@ function hillCipherEncrypt(text, keyMatrix) {
         let result = new Array(size).fill(0);
         for (let row = 0; row < size; row++) {
             for (let col = 0; col < size; col++) {
-                result[row] += keyMatrix[row * size + col] * chunk[col];
+                result[row] += keyMatrix[row][col] * chunk[col];
             }
             result[row] = result[row] % 26;
         }
@@ -83,5 +83,42 @@ function hillCipherEncrypt(text, keyMatrix) {
 }
 
 function hillCipherDecrypt(text, keyMatrix) {
-    return "[Hasil Dekripsi]"; // Implementasi invers matriks nanti
+    let size = keyMatrix.length;
+    let inverseMatrix = invertMatrixMod26(keyMatrix);
+    if (!inverseMatrix) {
+        return "Matriks tidak memiliki invers mod 26";
+    }
+    let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
+    let decryptedNumbers = [];
+    for (let i = 0; i < textNumbers.length; i += size) {
+        let chunk = textNumbers.slice(i, i + size);
+        let result = new Array(size).fill(0);
+        for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+                result[row] += inverseMatrix[row][col] * chunk[col];
+            }
+            result[row] = (result[row] % 26 + 26) % 26;
+        }
+        decryptedNumbers.push(...result);
+    }
+    return decryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
+}
+
+function invertMatrixMod26(matrix) {
+    let det = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 26;
+    if (det < 0) det += 26;
+    let detInv = modInverse(det, 26);
+    if (detInv === -1) return null;
+    let inverse = [
+        [matrix[1][1] * detInv % 26, (-matrix[0][1] * detInv + 26) % 26],
+        [(-matrix[1][0] * detInv + 26) % 26, matrix[0][0] * detInv % 26]
+    ];
+    return inverse;
+}
+
+function modInverse(a, m) {
+    for (let x = 1; x < m; x++) {
+        if ((a * x) % m === 1) return x;
+    }
+    return -1;
 }
