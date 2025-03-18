@@ -1,3 +1,10 @@
+function addDummyLetters(text, size) {
+    while (text.length % size !== 0) {
+        text += 'X'; // Tambahkan 'X' sebagai dummy letter
+    }
+    return text;
+}
+
 function encryptDefault() {
     let text = document.getElementById("plain-text-default").value;
     if (!text) {
