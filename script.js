@@ -49,8 +49,13 @@ function decryptCustom() {
     document.getElementById("decrypted-custom").innerText = decryptedText;
 }
 
-function parseKeyMatrix(input) {
-    return input.split(",").map(Number);
+function parseKeyMatrix(input, maxSize) {
+    let matrix = input.split(",").map(Number);
+    if (matrix.length > maxSize * maxSize) {
+        alert("Matriks terlalu besar! Maksimal " + maxSize + "×" + maxSize);
+        return null;
+    }
+    return matrix;
 }
 
 function hillCipherEncrypt(text, keyMatrix) {
