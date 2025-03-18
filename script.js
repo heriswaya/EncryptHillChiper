@@ -1,4 +1,5 @@
 function addDummyLetters(text, size) {
+    text = text.replace(/\s+/g, ""); // Hapus spasi
     while (text.length % size !== 0) {
         text += 'X'; // Tambahkan 'X' sebagai dummy letter
     }
@@ -6,37 +7,32 @@ function addDummyLetters(text, size) {
 }
 
 function encryptDefault() {
-    let text = document.getElementById("plain-text-default").value;
+    let text = document.getElementById("plain-text-default").value.toUpperCase();
     if (!text) {
         alert("Masukkan teks untuk dienkripsi.");
         return;
     }
-    let keyMatrix = [[3, 3], [2, 5]]; // Matriks kunci bawaan 2x2
-    text = addDummyLetters(text, keyMatrix.length); // Sesuaikan dengan ukuran matriks
-
-    let encryptedText = hillCipherEncrypt(text, keyMatrix);
+    text = addDummyLetters(text, 2);
+    let encryptedText = hillCipherEncrypt(text, [[3, 3], [2, 5]]);
     document.getElementById("encrypted-default").innerText = encryptedText;
 }
 
 function encryptCustom() {
-    let text = document.getElementById("plain-text-custom").value;
+    let text = document.getElementById("plain-text-custom").value.toUpperCase();
     let keyInput = document.getElementById("custom-key").value;
     if (!text || !keyInput) {
         alert("Masukkan teks dan matriks kunci.");
         return;
     }
-    let keyMatrix = parseKeyMatrix(keyInput, 10); // Maksimal 10×10
+    let keyMatrix = parseKeyMatrix(keyInput, 10);
     if (!keyMatrix) return;
-
-    let matrixSize = keyMatrix.length;
-    text = addDummyLetters(text, matrixSize); // Tambahkan dummy letters sesuai ukuran matriks
-
+    text = addDummyLetters(text, Math.sqrt(keyMatrix.length));
     let encryptedText = hillCipherEncrypt(text, keyMatrix);
     document.getElementById("encrypted-custom").innerText = encryptedText;
 }
 
 function decryptDefault() {
-    let text = document.getElementById("encrypted-text-default").value;
+    let text = document.getElementById("encrypted-text-default").value.toUpperCase();
     if (!text) {
         alert("Masukkan teks terenkripsi.");
         return;
@@ -46,42 +42,46 @@ function decryptDefault() {
 }
 
 function decryptCustom() {
-    let text = document.getElementById("encrypted-text-custom").value;
+    let text = document.getElementById("encrypted-text-custom").value.toUpperCase();
     let keyInput = document.getElementById("custom-key-decrypt").value;
     if (!text || !keyInput) {
         alert("Masukkan teks terenkripsi dan matriks kunci.");
         return;
     }
-    let keyMatrix = parseKeyMatrix(keyInput, 10);
+    let keyMatrix = parseKeyMatrix(keyInput);
     if (!keyMatrix) return;
-
     let decryptedText = hillCipherDecrypt(text, keyMatrix);
     document.getElementById("decrypted-custom").innerText = decryptedText;
 }
 
 function parseKeyMatrix(input, maxSize) {
-    let numbers = input.split(",").map(Number);
-    let size = Math.sqrt(numbers.length);
-    if (!Number.isInteger(size)) {
-        alert("Matriks harus berbentuk persegi (2x2, 3x3, dll.).");
+    let matrix = input.split(",").map(Number);
+    let size = Math.sqrt(matrix.length);
+    if (size % 1 !== 0 || size > maxSize) {
+        alert("Matriks harus berbentuk NxN dan maksimal " + maxSize + "×" + maxSize);
         return null;
-    }
-    if (size > maxSize) {
-        alert("Matriks terlalu besar! Maksimal " + maxSize + "×" + maxSize);
-        return null;
-    }
-
-    let matrix = [];
-    for (let i = 0; i < size; i++) {
-        matrix.push(numbers.slice(i * size, (i + 1) * size));
     }
     return matrix;
 }
 
 function hillCipherEncrypt(text, keyMatrix) {
-    return "[Hasil Enkripsi]"; // Implementasikan logika Hill Cipher di sini
+    let size = Math.sqrt(keyMatrix.length);
+    let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
+    let encryptedNumbers = [];
+    for (let i = 0; i < textNumbers.length; i += size) {
+        let chunk = textNumbers.slice(i, i + size);
+        let result = new Array(size).fill(0);
+        for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+                result[row] += keyMatrix[row * size + col] * chunk[col];
+            }
+            result[row] = result[row] % 26;
+        }
+        encryptedNumbers.push(...result);
+    }
+    return encryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
 }
 
 function hillCipherDecrypt(text, keyMatrix) {
-    return "[Hasil Dekripsi]"; // Implementasikan logika Hill Cipher di sini
+    return "[Hasil Dekripsi]"; // Implementasi invers matriks nanti
 }
