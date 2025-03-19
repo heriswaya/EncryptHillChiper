@@ -51,14 +51,15 @@ function inverseMatrix2x2(matrix) {
 }
 
 function encryptDefault() {
-    let text = document.getElementById("plain-text-default").value.toUpperCase().replace(/[^A-Z]/g, '');
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa angka atau simbol.");
-        return;
-    }
-    
+    let text = document.getElementById("plain-text-default").value.toUpperCase();
+
     if (!text) {
         alert("Masukkan teks untuk dienkripsi.");
+        return;
+    }
+
+    if (!isValidInput(text)) {
+        alert("Masukkan hanya huruf A-Z tanpa angka atau simbol.");
         return;
     }
 
@@ -76,14 +77,15 @@ function encryptDefault() {
 }
 
 function decryptDefault() {
-    let text = document.getElementById("encrypted-text-default").value.toUpperCase().replace(/[^A-Z]/g, '');
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
-        return;
-    }
-    
+    let text = document.getElementById("encrypted-text-default").value.toUpperCase();
+
     if (!text) {
         alert("Masukkan teks terenkripsi.");
+        return;
+    }
+
+    if (!isValidInput(text)) {
+        alert("Masukkan hanya huruf A-Z tanpa angka atau simbol.");
         return;
     }
 
