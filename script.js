@@ -65,6 +65,8 @@ function encryptDefault() {
 
     if (!isValidInput(text)) return; // Validasi input
 
+    text = text.replace(/\s+/g, ''); // 🔥 Hapus semua spasi sebelum enkripsi
+
     let keyMatrix = [[3, 5], [1, 2]];
     let blockSize = keyMatrix.length;
 
