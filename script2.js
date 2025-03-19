@@ -32,7 +32,7 @@ function encryptCustom() {
         return;
     }
     // Cek apakah matriks memiliki invers modular 26
-    let inverseMatrix = getModularInverseMatrix(keyMatrix, size);
+    let inverseMatrix = getModularInverseMatrix(keyMatrix, matrixSize);
     if (!inverseMatrix) {
         showErrorMessage("Matriks kunci tidak memiliki invers modular (mod 26)!");
         return;
@@ -220,7 +220,7 @@ function getAdjugate(matrix, size) {
             for (let j = 0; j < 3; j++) {
                 let minor = getMinor(matrix, i, j);
                 let detMinor = getDeterminant(minor, 2);
-                row.push((detMinor * (i + j) % 2 === 0 ? 1 : -1));
+                row.push(detMinor * ((i + j) % 2 === 0 ? 1 : -1));
             }
             adj.push(row);
         }
