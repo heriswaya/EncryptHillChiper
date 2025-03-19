@@ -30,7 +30,7 @@
                         
                         <div class="mb-3">
                             <label for="plain-text-default" class="form-label fw-bold">Masukkan teks:</label>
-                            <textarea class="form-control" id="plain-text-default" rows="3" placeholder="Masukkan teks..."></textarea>
+                            <textarea class="form-control" id="plain-text-default" rows="3" placeholder="Masukkan teks yang akan dienkripsi..."></textarea>
                         </div>
 
                         <div class="d-grid">
@@ -41,7 +41,7 @@
 
                         <h3 class="mt-3">Hasil Enkripsi:</h3>
                         <div class="input-group">
-                            <input type="text" id="encrypted-default" class="form-control" readonly>
+                            <textarea id="encrypted-default" class="form-control" rows="2" readonly></textarea>
                             <button class="btn btn-outline-secondary" onclick="copyToClipboard()">
                                 📋 Salin
                             </button>
@@ -67,17 +67,15 @@
 
     <script>
         function copyToClipboard() {
-            let encryptedText = document.getElementById("encrypted-default");
-            encryptedText.select();
-            encryptedText.setSelectionRange(0, 99999); // Untuk mobile
-            document.execCommand("copy");
+            let encryptedText = document.getElementById("encrypted-default").value;
+            navigator.clipboard.writeText(encryptedText).then(() => {
+                let copyMessage = document.getElementById("copy-message");
+                copyMessage.style.display = "block";
 
-            let copyMessage = document.getElementById("copy-message");
-            copyMessage.style.display = "block";
-
-            setTimeout(() => {
-                copyMessage.style.display = "none";
-            }, 2000);
+                setTimeout(() => {
+                    copyMessage.style.display = "none";
+                }, 2000);
+            }).catch(err => console.error("Gagal menyalin:", err));
         }
     </script>
 
