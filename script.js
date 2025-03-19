@@ -10,7 +10,9 @@ function textToNumbers(text) {
 }
 
 function numbersToText(numbers) {
-    return numbers.map(num => String.fromCharCode((num % 26) + 65)).join('');
+    let text = numbers.map(num => String.fromCharCode((num % 26) + 65)).join('');
+    console.log("Konversi ke teks:", text); // Debugging
+    return text;
 }
 
 function multiplyMatrixVector(matrix, vector) {
@@ -57,31 +59,31 @@ function isValidInput(text) {
 
 function encryptDefault() {
     let text = document.getElementById("plain-text-default").value.toUpperCase();
-
+    
     if (!text) {
         alert("Masukkan teks untuk dienkripsi.");
         return;
     }
 
-    if (!isValidInput(text)) return; // Validasi input
-
-    text = text.replace(/\s+/g, ''); // 🔥 Hapus semua spasi sebelum enkripsi
+    if (!isValidInput(text)) return;
 
     let keyMatrix = [[3, 5], [1, 2]];
     let blockSize = keyMatrix.length;
-
-    // ✅ Tambahkan padding 'X' jika panjang tidak sesuai
     let paddedText = addDummyLetters(text, blockSize)
-        .split("")
-        .map(char => char.charCodeAt(0) - 65);
-
+                        .split("")
+                        .map(char => char.charCodeAt(0) - 65);
+    
     let encryptedNumbers = [];
+
     for (let i = 0; i < paddedText.length; i += blockSize) {
         let block = paddedText.slice(i, i + blockSize);
         encryptedNumbers.push(...multiplyMatrixVector(keyMatrix, block));
     }
 
-    document.getElementById("encrypted-default").value = numbersToText(encryptedNumbers);
+    let encryptedText = numbersToText(encryptedNumbers);
+    console.log("Hasil Enkripsi:", encryptedText);  // Debugging
+
+    document.getElementById("encrypted-default").value = encryptedText;
 }
 
 function decryptDefault() {
