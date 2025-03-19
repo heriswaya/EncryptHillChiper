@@ -6,7 +6,11 @@ function addDummyLetters(text, size) {
 }
 
 function isValidInput(text) {
-    return /^[A-Z]+$/.test(text);  // Pastikan hanya huruf A-Z
+    if (!/^[A-Z]+$/i.test(text)) { // Hanya huruf A-Z, case insensitive
+        alert("Input hanya boleh berisi huruf A-Z tanpa angka atau simbol.");
+        return false;
+    }
+    return true;
 }
 
 function textToNumbers(text) {
@@ -58,10 +62,7 @@ function encryptDefault() {
         return;
     }
 
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa angka atau simbol.");
-        return;
-    }
+    if (!isValidInput(text)) return; // Validasi input
 
     let keyMatrix = [[3, 5], [1, 2]];
     let blockSize = keyMatrix.length;
@@ -84,10 +85,7 @@ function decryptDefault() {
         return;
     }
 
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa angka atau simbol.");
-        return;
-    }
+    if (!isValidInput(text)) return; // Validasi input
 
     let keyMatrix = [[3, 5], [1, 2]];
     let inverseKey = inverseMatrix2x2(keyMatrix);
@@ -113,10 +111,7 @@ function decryptDefault() {
 function hillCipherEncrypt(text, keyMatrix) {
     let size = keyMatrix.length;
     
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
-        return "";
-    }
+    if (!isValidInput(text)) return; // Validasi input
 
     let paddedText = addDummyLetters(cleanedText, size).split("").map(char => char.charCodeAt(0) - 65);
     
@@ -144,10 +139,7 @@ function hillCipherDecrypt(text, keyMatrix) {
         return "";
     }
 
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
-        return "";
-    }
+    if (!isValidInput(text)) return; // Validasi input
     
     let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
     let decryptedNumbers = [];
