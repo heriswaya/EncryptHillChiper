@@ -6,7 +6,7 @@ function addDummyLetters(text, size) {
 }
 
 function isValidInput(text) {
-    return !/[^A-Z]/.test(text); // Jika ada karakter selain A-Z, return false
+    return /^[A-Z]+$/.test(text);  // Pastikan hanya huruf A-Z
 }
 
 function textToNumbers(text) {
@@ -53,13 +53,13 @@ function inverseMatrix2x2(matrix) {
 
 function encryptDefault() {
     let text = document.getElementById("plain-text-default").value.toUpperCase().replace(/[^A-Z]/g, '');
-    if (!text) {
-        alert("Masukkan teks untuk dienkripsi.");
+    if (!isValidInput(text)) {
+        alert("Masukkan hanya huruf A-Z tanpa angka atau simbol.");
         return;
     }
-
-    if (!isValidInput(text)) {
-        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
+    
+    if (!text) {
+        alert("Masukkan teks untuk dienkripsi.");
         return;
     }
 
@@ -78,13 +78,13 @@ function encryptDefault() {
 
 function decryptDefault() {
     let text = document.getElementById("encrypted-text-default").value.toUpperCase().replace(/[^A-Z]/g, '');
-    if (!text) {
-        alert("Masukkan teks terenkripsi.");
-        return;
-    }
-
     if (!isValidInput(text)) {
         alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
+        return;
+    }
+    
+    if (!text) {
+        alert("Masukkan teks terenkripsi.");
         return;
     }
 
@@ -111,9 +111,8 @@ function decryptDefault() {
 
 function hillCipherEncrypt(text, keyMatrix) {
     let size = keyMatrix.length;
-    let cleanedText = text.toUpperCase().replace(/[^A-Z]/g, ''); // Hanya huruf A-Z
     
-    if (!isValidInput(cleanedText)) {
+    if (!isValidInput(text)) {
         alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
         return "";
     }
