@@ -81,7 +81,7 @@ function encryptDefault() {
         encryptedNumbers.push(...multiplyMatrixVector(keyMatrix, block));
     }
 
-    document.getElementById("encrypted-default").innerText = numbersToText(encryptedNumbers);
+    document.getElementById("encrypted-default").value = numbersToText(encryptedNumbers);
 }
 
 function decryptDefault() {
