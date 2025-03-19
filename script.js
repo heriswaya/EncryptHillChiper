@@ -131,10 +131,12 @@ function parseKeyMatrix(input, maxSize) {
 
 function hillCipherEncrypt(text, keyMatrix) {
     let size = keyMatrix.length;
-    let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
+    let cleanedText = text.toUpperCase().replace(/[^A-Z]/g, ''); // Hanya huruf A-Z
+    let paddedText = addDummyLetters(cleanedText, size).split("").map(char => char.charCodeAt(0) - 65);
+    
     let encryptedNumbers = [];
-    for (let i = 0; i < textNumbers.length; i += size) {
-        let chunk = textNumbers.slice(i, i + size);
+    for (let i = 0; i < paddedText.length; i += size) {
+        let chunk = paddedText.slice(i, i + size);
         let result = new Array(size).fill(0);
         for (let row = 0; row < size; row++) {
             for (let col = 0; col < size; col++) {
@@ -144,6 +146,7 @@ function hillCipherEncrypt(text, keyMatrix) {
         }
         encryptedNumbers.push(...result);
     }
+    
     return encryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
 }
 
@@ -153,6 +156,7 @@ function hillCipherDecrypt(text, keyMatrix) {
     if (!inverseMatrix) {
         return "Matriks tidak memiliki invers mod 26";
     }
+    
     let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
     let decryptedNumbers = [];
     for (let i = 0; i < textNumbers.length; i += size) {
@@ -166,5 +170,7 @@ function hillCipherDecrypt(text, keyMatrix) {
         }
         decryptedNumbers.push(...result);
     }
-    return decryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
+    
+    let decryptedText = decryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
+    return decryptedText.replace(/X+$/, ""); // Hapus padding 'X' di akhir teks
 }
