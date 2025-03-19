@@ -1,20 +1,95 @@
 function addDummyLetters(text, size) {
-    text = text.replace(/\s+/g, ""); // Hapus spasi
     while (text.length % size !== 0) {
         text += 'X'; // Tambahkan 'X' sebagai dummy letter
     }
     return text;
 }
 
+function textToNumbers(text) {
+    return text.toUpperCase().replace(/[^A-Z]/g, '') // Hanya huruf A-Z
+                .split('').map(char => char.charCodeAt(0) - 65);
+}
+
+function numbersToText(numbers) {
+    return numbers.map(num => String.fromCharCode((num % 26) + 65)).join('');
+}
+
+function multiplyMatrixVector(matrix, vector) {
+    let result = [];
+    for (let i = 0; i < matrix.length; i++) {
+        let sum = 0;
+        for (let j = 0; j < matrix[i].length; j++) {
+            sum += matrix[i][j] * vector[j];
+        }
+        result.push(sum % 26);
+    }
+    return result;
+}
+
+function modInverse(a, m) {
+    for (let i = 1; i < m; i++) {
+        if ((a * i) % m === 1) return i;
+    }
+    return null;
+}
+
+function inverseMatrix2x2(matrix) {
+    let det = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 26;
+    if (det < 0) det += 26;
+    let detInv = modInverse(det, 26);
+    if (detInv === null) {
+        alert("Matriks tidak memiliki invers di mod 26.");
+        return null;
+    }
+    return [
+        [(matrix[1][1] * detInv) % 26, (-matrix[0][1] * detInv + 26) % 26],
+        [(-matrix[1][0] * detInv + 26) % 26, (matrix[0][0] * detInv) % 26]
+    ];
+}
+
 function encryptDefault() {
-    let text = document.getElementById("plain-text-default").value.toUpperCase();
+    let text = document.getElementById("plain-text-default").value;
     if (!text) {
         alert("Masukkan teks untuk dienkripsi.");
         return;
     }
-    text = addDummyLetters(text, 2);
-    let encryptedText = hillCipherEncrypt(text, [[3, 5], [1, 2]]);
-    document.getElementById("encrypted-default").innerText = encryptedText;
+    let keyMatrix = [[3, 5], [1, 2]];
+    let blockSize = keyMatrix.length;
+    let cleanedText = textToNumbers(text);
+    let paddedText = addDummyLetters(cleanedText, blockSize);
+    let encryptedNumbers = [];
+    
+    for (let i = 0; i < paddedText.length; i += blockSize) {
+        let block = paddedText.slice(i, i + blockSize);
+        encryptedNumbers.push(...multiplyMatrixVector(keyMatrix, block));
+    }
+    
+    document.getElementById("encrypted-default").innerText = numbersToText(encryptedNumbers);
+}
+
+function decryptDefault() {
+    let text = document.getElementById("encrypted-text-default").value;
+    if (!text) {
+        alert("Masukkan teks terenkripsi.");
+        return;
+    }
+    let keyMatrix = [[3, 5], [1, 2]];
+    let inverseKey = inverseMatrix2x2(keyMatrix);
+    if (!inverseKey) return;
+    
+    let blockSize = keyMatrix.length;
+    let encryptedNumbers = textToNumbers(text);
+    let decryptedNumbers = [];
+    
+    for (let i = 0; i < encryptedNumbers.length; i += blockSize) {
+        let block = encryptedNumbers.slice(i, i + blockSize);
+        decryptedNumbers.push(...multiplyMatrixVector(inverseKey, block));
+    }
+    
+    let decryptedText = numbersToText(decryptedNumbers);
+    decryptedText = decryptedText.replace(/X+$/, ''); // Hilangkan padding 'X' di akhir
+    
+    document.getElementById("decrypted-default").innerText = decryptedText;
 }
 
 function encryptCustom() {
@@ -29,16 +104,6 @@ function encryptCustom() {
     text = addDummyLetters(text, Math.sqrt(keyMatrix.length));
     let encryptedText = hillCipherEncrypt(text, keyMatrix);
     document.getElementById("encrypted-custom").innerText = encryptedText;
-}
-
-function decryptDefault() {
-    let text = document.getElementById("encrypted-text-default").value.toUpperCase();
-    if (!text) {
-        alert("Masukkan teks terenkripsi.");
-        return;
-    }
-    let decryptedText = hillCipherDecrypt(text, [[3, 5], [1, 2]]);
-    document.getElementById("decrypted-default").innerText = decryptedText;
 }
 
 function decryptCustom() {
@@ -102,23 +167,4 @@ function hillCipherDecrypt(text, keyMatrix) {
         decryptedNumbers.push(...result);
     }
     return decryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
-}
-
-function invertMatrixMod26(matrix) {
-    let det = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 26;
-    if (det < 0) det += 26;
-    let detInv = modInverse(det, 26);
-    if (detInv === -1) return null;
-    let inverse = [
-        [matrix[1][1] * detInv % 26, (-matrix[0][1] * detInv + 26) % 26],
-        [(-matrix[1][0] * detInv + 26) % 26, matrix[0][0] * detInv % 26]
-    ];
-    return inverse;
-}
-
-function modInverse(a, m) {
-    for (let x = 1; x < m; x++) {
-        if ((a * x) % m === 1) return x;
-    }
-    return -1;
 }
