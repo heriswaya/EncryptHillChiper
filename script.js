@@ -10,8 +10,7 @@ function isValidInput(text) {
 }
 
 function textToNumbers(text) {
-    return text.toUpperCase().replace(/[^A-Z]/g, '') // Hanya huruf A-Z
-                .split('').map(char => char.charCodeAt(0) - 65);
+    return text.split('').map(char => char.charCodeAt(0) - 65);
 }
 
 function numbersToText(numbers) {
