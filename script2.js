@@ -2,6 +2,18 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("encrypt-button").addEventListener("click", encryptCustom);
 });
 
+// Fungsi untuk menampilkan pesan error jika matriks tidak memiliki invers mod 26
+function showErrorMessage(message) {
+    let errorMessage = document.getElementById("error-message");
+    errorMessage.innerText = message;
+    errorMessage.style.display = "block";
+
+    // Sembunyikan pesan setelah 3 detik
+    setTimeout(() => {
+        errorMessage.style.display = "none";
+    }, 3000);
+}
+
 function encryptCustom() {
     let text = document.getElementById("plain-text-custom").value.toUpperCase();
 
@@ -17,6 +29,12 @@ function encryptCustom() {
     
     if (!keyMatrix) {
         alert("Matriks kunci tidak valid. Pastikan semua nilai terisi dan berupa angka.");
+        return;
+    }
+    // Cek apakah matriks memiliki invers modular 26
+    let inverseMatrix = getModularInverseMatrix(keyMatrix, size);
+    if (!inverseMatrix) {
+        showErrorMessage("Matriks kunci tidak memiliki invers modular (mod 26)!");
         return;
     }
 
