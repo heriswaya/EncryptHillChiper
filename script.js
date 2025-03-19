@@ -48,8 +48,8 @@ function inverseMatrix2x2(matrix) {
 
 // ✅ Fungsi validasi input
 function isValidInput(text) {
-    if (!/^[A-Z]+$/.test(text)) { // Hanya huruf A-Z, case-sensitive
-        alert("Input hanya boleh berisi huruf A-Z tanpa angka atau simbol.");
+    if (/[^A-Z\s]/.test(text)) { // ❌ Jika ada selain huruf A-Z & spasi, munculkan alert
+        alert("Input hanya boleh berisi huruf A-Z.");
         return false;
     }
     return true;
