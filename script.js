@@ -6,7 +6,7 @@ function addDummyLetters(text, size) {
 }
 
 function isValidInput(text) {
-    return /^[A-Z]+$/.test(text);
+    return !/[^A-Z]/.test(text); // Jika ada karakter selain A-Z, return false
 }
 
 function textToNumbers(text) {
