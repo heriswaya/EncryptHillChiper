@@ -13,7 +13,7 @@ function encryptDefault() {
         return;
     }
     text = addDummyLetters(text, 2);
-    let encryptedText = hillCipherEncrypt(text, [[3, 3], [2, 5]]);
+    let encryptedText = hillCipherEncrypt(text, [[3, 5], [1, 2]]);
     document.getElementById("encrypted-default").innerText = encryptedText;
 }
 
@@ -37,7 +37,7 @@ function decryptDefault() {
         alert("Masukkan teks terenkripsi.");
         return;
     }
-    let decryptedText = hillCipherDecrypt(text, [[3, 3], [2, 5]]);
+    let decryptedText = hillCipherDecrypt(text, [[3, 5], [1, 2]]);
     document.getElementById("decrypted-default").innerText = decryptedText;
 }
 
