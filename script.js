@@ -5,6 +5,10 @@ function addDummyLetters(text, size) {
     return text;
 }
 
+function isValidInput(text) {
+    return /^[A-Z]+$/.test(text);
+}
+
 function textToNumbers(text) {
     return text.toUpperCase().replace(/[^A-Z]/g, '') // Hanya huruf A-Z
                 .split('').map(char => char.charCodeAt(0) - 65);
@@ -48,90 +52,72 @@ function inverseMatrix2x2(matrix) {
 }
 
 function encryptDefault() {
-    let text = document.getElementById("plain-text-default").value;
+    let text = document.getElementById("plain-text-default").value.toUpperCase().replace(/[^A-Z]/g, '');
     if (!text) {
         alert("Masukkan teks untuk dienkripsi.");
         return;
     }
+
+    if (!isValidInput(text)) {
+        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
+        return;
+    }
+
     let keyMatrix = [[3, 5], [1, 2]];
     let blockSize = keyMatrix.length;
-    let cleanedText = textToNumbers(text);
-    let paddedText = addDummyLetters(cleanedText, blockSize);
+    let paddedText = addDummyLetters(text, blockSize).split("").map(char => char.charCodeAt(0) - 65);
     let encryptedNumbers = [];
-    
+
     for (let i = 0; i < paddedText.length; i += blockSize) {
         let block = paddedText.slice(i, i + blockSize);
         encryptedNumbers.push(...multiplyMatrixVector(keyMatrix, block));
     }
-    
+
     document.getElementById("encrypted-default").innerText = numbersToText(encryptedNumbers);
 }
 
 function decryptDefault() {
-    let text = document.getElementById("encrypted-text-default").value;
+    let text = document.getElementById("encrypted-text-default").value.toUpperCase().replace(/[^A-Z]/g, '');
     if (!text) {
         alert("Masukkan teks terenkripsi.");
         return;
     }
+
+    if (!isValidInput(text)) {
+        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
+        return;
+    }
+
     let keyMatrix = [[3, 5], [1, 2]];
     let inverseKey = inverseMatrix2x2(keyMatrix);
-    if (!inverseKey) return;
-    
+    if (!inverseKey) {
+        alert("Matriks tidak memiliki invers mod 26.");
+        return;
+    }
+
     let blockSize = keyMatrix.length;
-    let encryptedNumbers = textToNumbers(text);
+    let encryptedNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
     let decryptedNumbers = [];
-    
+
     for (let i = 0; i < encryptedNumbers.length; i += blockSize) {
         let block = encryptedNumbers.slice(i, i + blockSize);
         decryptedNumbers.push(...multiplyMatrixVector(inverseKey, block));
     }
-    
+
     let decryptedText = numbersToText(decryptedNumbers);
-    decryptedText = decryptedText.replace(/X+$/, ''); // Hilangkan padding 'X' di akhir
     
-    document.getElementById("decrypted-default").innerText = decryptedText;
-}
-
-function encryptCustom() {
-    let text = document.getElementById("plain-text-custom").value.toUpperCase();
-    let keyInput = document.getElementById("custom-key").value;
-    if (!text || !keyInput) {
-        alert("Masukkan teks dan matriks kunci.");
-        return;
-    }
-    let keyMatrix = parseKeyMatrix(keyInput, 10);
-    if (!keyMatrix) return;
-    text = addDummyLetters(text, Math.sqrt(keyMatrix.length));
-    let encryptedText = hillCipherEncrypt(text, keyMatrix);
-    document.getElementById("encrypted-custom").innerText = encryptedText;
-}
-
-function decryptCustom() {
-    let text = document.getElementById("encrypted-text-custom").value.toUpperCase();
-    let keyInput = document.getElementById("custom-key-decrypt").value;
-    if (!text || !keyInput) {
-        alert("Masukkan teks terenkripsi dan matriks kunci.");
-        return;
-    }
-    let keyMatrix = parseKeyMatrix(keyInput);
-    if (!keyMatrix) return;
-    let decryptedText = hillCipherDecrypt(text, keyMatrix);
-    document.getElementById("decrypted-custom").innerText = decryptedText;
-}
-
-function parseKeyMatrix(input, maxSize) {
-    let matrix = input.split(",").map(Number);
-    let size = Math.sqrt(matrix.length);
-    if (size % 1 !== 0 || size > maxSize) {
-        alert("Matriks harus berbentuk NxN dan maksimal " + maxSize + "×" + maxSize);
-        return null;
-    }
-    return matrix;
+    document.getElementById("decrypted-default").innerText = decryptedText; // Dummy letter tidak dihapus
 }
 
 function hillCipherEncrypt(text, keyMatrix) {
     let size = keyMatrix.length;
     let cleanedText = text.toUpperCase().replace(/[^A-Z]/g, ''); // Hanya huruf A-Z
+    
+    if (!isValidInput(cleanedText)) {
+        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
+        return "";
+    }
+
     let paddedText = addDummyLetters(cleanedText, size).split("").map(char => char.charCodeAt(0) - 65);
     
     let encryptedNumbers = [];
@@ -154,7 +140,13 @@ function hillCipherDecrypt(text, keyMatrix) {
     let size = keyMatrix.length;
     let inverseMatrix = invertMatrixMod26(keyMatrix);
     if (!inverseMatrix) {
-        return "Matriks tidak memiliki invers mod 26";
+        alert("Matriks tidak memiliki invers mod 26.");
+        return "";
+    }
+
+    if (!isValidInput(text)) {
+        alert("Masukkan hanya huruf A-Z tanpa karakter lain.");
+        return "";
     }
     
     let textNumbers = text.split("").map(char => char.charCodeAt(0) - 65);
@@ -171,6 +163,5 @@ function hillCipherDecrypt(text, keyMatrix) {
         decryptedNumbers.push(...result);
     }
     
-    let decryptedText = decryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
-    return decryptedText.replace(/X+$/, ""); // Hapus padding 'X' di akhir teks
+    return decryptedNumbers.map(num => String.fromCharCode(num + 65)).join("");
 }
